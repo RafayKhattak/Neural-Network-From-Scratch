@@ -106,8 +106,96 @@ def make_predictions(X, W1, b1, W2, b2, W3, b3):
     predictions = get_predictions(A3)
     return predictions
 ```
-This function makes predictions for a given set of inputs.
-It takes input data X and the learned weights and biases as input.
-Calls forward_propagation() to obtain the final output probabilities.
-Calls get_predictions() to convert the probabilities into predicted labels.
-Returns the predicted labels.
+- This function makes predictions for a given set of inputs.
+- It takes input data X and the learned weights and biases as input.
+- Calls forward_propagation() to obtain the final output probabilities.
+- Calls get_predictions() to convert the probabilities into predicted labels.
+- Returns the predicted labels.
+6. test_prediction()
+```
+# Test prediction for a specific index in the training set
+def test_prediction(index, W1, b1, W2, b2, W3, b3):
+    current_image = X_train[:, index, None]
+    prediction = make_predictions(current_image, W1, b1, W2, b2, W3, b3)
+    label = Y_train[index]
+    print("Prediction:", prediction)
+    print("Label:", label)
+
+    current_image = current_image.reshape((28, 28)) * 255
+    plt.gray()
+    plt.imshow(current_image, interpolation='nearest')
+    plt.show()
+```
+- This function tests the prediction for a specific index in the training set.
+- Takes an index, the learned weights and biases as input.
+- Retrieves the image at the specified index from X_train.
+- Calls predict() to make a prediction for the image using the learned parameters.
+- Prints the predicted label and the true label.
+- Reshapes the image and displays it using matplotlib.
+7. ReLU()
+```
+# ReLU activation function
+def ReLU(Z):
+    return np.maximum(Z, 0)
+```
+- Implements the Rectified Linear Unit activation function, which returns the maximum between 0 and the input Z.
+8. ReLU_deriv()
+```
+# Derivative of ReLU activation function
+def ReLU_deriv(Z):
+    return Z > 0
+```
+- Calculates the derivative of the ReLU activation function, which returns 1 for positive values of Z and 0 otherwise.
+9. softmax()
+```
+# Softmax activation function
+def softmax(Z):
+    A = np.exp(Z) / np.sum(np.exp(Z), axis=0)
+    return A
+```
+- Implements the softmax activation function, which calculates the probabilities for each class given the input Z.
+10. one_hot()
+```
+# Convert labels to one-hot encoding
+def one_hot(Y):
+    one_hot_Y = np.zeros((Y.size, Y.max() + 1))
+    one_hot_Y[np.arange(Y.size), Y] = 1
+    one_hot_Y = one_hot_Y.T
+    return one_hot_Y
+```
+- Converts the labels Y into one-hot encoded vectors using NumPy operations.
+11. get_predictions()
+```
+# Get the predicted labels by selecting the index with the highest probability
+def get_predictions(A3):
+    return np.argmax(A3, axis=0)
+```
+- Retrieves the predicted labels from the final output probabilities by selecting the index of the highest probability for each example.
+12. get_accuracy()
+```
+# Calculate the accuracy of the predictions
+def get_accuracy(predictions, Y):
+    return np.sum(predictions == Y) / Y.size
+```
+- np.sum(predictions == Y): This line compares each element in the predictions array with the corresponding element in the Y array and returns an array of boolean values indicating whether the prediction matches the actual label. np.sum then counts the number of True values, which represents the number of correct predictions.
+- Y.size: This line divides the number of correct predictions by the total number of examples in the dataset (Y.size). This calculates the accuracy as a decimal value between 0 and 1.
+- The function returns the calculated accuracy.
+13. update_params()
+```
+# Update parameters using gradient descent
+def update_params(W1, b1, W2, b2, W3, b3, dW1, db1, dW2, db2, dW3, db3, alpha):
+    W1 -= alpha * dW1
+    b1 -= alpha * db1
+    W2 -= alpha * dW2
+    b2 -= alpha * db2
+    W3 -= alpha * dW3
+    b3 -= alpha * db3
+    return W1, b1, W2, b2, W3, b3
+```
+- This function updates the parameters using gradient descent.
+- It takes the weights, biases, gradients, and learning rate as input.
+- Updates the weights and biases using the gradients and learning rate.
+- Returns the updated weights and biases.
+
+
+
